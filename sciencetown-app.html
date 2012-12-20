@@ -1,0 +1,22 @@
+<head>
+  <title>Sciencetown</title>
+</head>
+
+<body>
+  {{> map}}
+</body>
+
+<template name="map">
+  {{#each hexes}}
+    {{> hex}}
+  {{/each}}
+</template>
+
+
+<template name="hex">
+  <span class="hex" style="left: {{left}}px; top: {{top}}px; color: {{textColor}}; background-image: url(/static/hex2_{{color}}.png)">
+    <div class="code">{{code}}</div>
+    <div class="opened"><div>{{name}}</div></div>
+    <div class="cost">{{cost}}</div>
+  </span>
+</template>
