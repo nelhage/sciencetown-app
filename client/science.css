@@ -1,3 +1,34 @@
+body {
+    background-color: #ccc;
+}
+
+.open.color_red {
+    background-image: url(/static/hex2_red.png);
+}
+.open.color_green {
+    background-image: url(/static/hex2_green.png);
+}
+.open.color_yellow {
+    background-image: url(/static/hex2_yellow.png);
+}
+.open.color_orange {
+    background-image: url(/static/hex2_orange.png);
+}
+.open.color_purple {
+    background-image: url(/static/hex2_purple.png);
+    color: #fff;
+}
+.open.color_blue {
+    background-image: url(/static/hex2_blue.png);
+    color: #fff;
+}
+.open.color_white {
+    background-image: url(/static/hex2_white.png);
+}
+.hex.closed {
+    background-image: url(/static/hex2.png);
+}
+
 #map {
     position: absolute;
     left: 650px;
@@ -15,7 +46,7 @@
     background-repeat: no-repeat;
 };
 
-.code {
+.hex .code {
     position: absolute;
     top: 10px;
     width: 125px;
@@ -23,14 +54,14 @@
     font-family: Courier;
 }
 
-.cost {
+.hex .cost {
     position: absolute;
     top: 85px;
     font-size: 24px;
     width: 125px;
     font-family: Courier;
 }
-.opened {
+.hex .opened {
     position: absolute;
     top: 25px;
     font-size: 12px;
@@ -38,24 +69,23 @@
     width: 125px;
     display: table;
 }
-.opened div {
+.hex .opened div {
     display: table-cell;
     vertical-align: middle;
 }
 
-.opened div span {
+.hex .opened div span {
     display: block;
     width:  80px;
     margin: auto;
 }
 
-.closed {
-    position: relative;
+.hex .closed {
+    position: absolute;
     font-size: 36px;
-    left: 22px;
-    top: 85px;
+    width: 125px;
+    top: 36px;
 }
-
 
 a {
     text-decoration: none;

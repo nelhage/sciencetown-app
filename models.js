@@ -99,23 +99,70 @@ var initialData = [
 "2       -4      red   0 FRSH Frightening Freshness",
 ];
 
-Meteor.startup(function () {
-    if (MapData.find().count())
-        return;
-    initialData.forEach (function (line) {
-        var pieces = line.split(/\s+/);
-        var hex = {
-            x: parseInt(pieces[0]),
-            y: parseInt(pieces[1]),
-            color: pieces[2],
-            cost: parseInt(pieces[3]),
-            code: pieces[4],
-            name: pieces.slice(5).join(" ")
-        };
-        MapData.insert(hex);
-    })
-});
+if (Meteor.isServer) {
+    Meteor.startup(function () {
+        if (MapData.find().count() == 0)
+            reloadData();
+        });
+}
 
+function hexDist(x, y) {
+    var dist = 0;
+    while (x != 0 || y != 0) {
+        dist++;
+        if (x > 0 && y < 0) {
+            x--;
+            y++;
+        } else if (x < 0 && y > 0) {
+            x++;
+            y--;
+        } else if (x > 0) {
+            x--;
+        } else if (y > 0) {
+            y--;
+        } else if (x < 0) {
+            x++;
+        } else if (y < 0) {
+            y++;
+        }
+    }
+    return dist;
+}
+
+function open(x, y, who) {
+    var hex = MapData.findOne({x: x, y: y});
+    if (hex === null)
+        return hex;
+    hex.opened.at = new Date().getTime() / 1000;
+    hex.opened.by = who;
+    hex.distance = 0;
+    MapData.update(hex._id, hex);
+}
+
+function reloadData() {
+    MapData.remove({});
+    var costByDist = [0, 1, 3, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7];
+    initialData.forEach(function (line) {
+        var pieces = line.split(/\s+/);
+        var x = parseInt(pieces[0]);
+        var y = parseInt(pieces[1]);
+        var hex = {
+                x: x,
+                y: y,
+                color: pieces[2],
+                cost: costByDist[hexDist(x, y)],
+                code: pieces[4],
+                name: pieces.slice(5).join(" "),
+                opened: {
+                    at: null,
+                    by: null,
+                },
+                distance: 100
+            };
+            MapData.insert(hex);
+        });
+    open(0, 0, "-");
+}
 
 function hex_top(hex) {
     return hex.x * -106 - hex.y * 53

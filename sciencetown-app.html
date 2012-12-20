@@ -16,9 +16,18 @@
 
 
 <template name="hex">
-  <span class="hex" style="left: {{left}}px; top: {{top}}px; color: {{textColor}}; background-image: url(/static/hex2_{{color}}.png)">
+  <span style="left: {{left}}px; top: {{top}}px;" class="hex {{css_class}}">
+    {{#if showCode }}
     <div class="code">{{code}}</div>
     <div class="opened"><div><span>{{name}}</span></div></div>
-    <div class="cost">{{cost}}</div>
+      {{#if showWho}}
+       <div class="who">{{opened.by}}</div>
+      {{/if}}
+      {{#if showCost}}
+        <div class="cost">{{cost}}</div>
+      {{/if}}
+    {{else}}
+    <div class="closed">{{cost}}</div>
+    {{/if}}
   </span>
 </template>
