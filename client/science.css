@@ -1,3 +1,9 @@
+#map {
+    position: absolute;
+    left: 650px;
+    top:  650px;
+}
+
 .hex {
     z-index: 5;
     position: absolute;
@@ -9,38 +15,40 @@
     background-repeat: no-repeat;
 };
 
-.hex img {
-    position: relative;
-    left: 0px;
-    top: 0px;
-}
-
 .code {
-    position:relative;
-    top: 5px;
+    position: absolute;
+    top: 10px;
+    width: 125px;
     font-size: 14px;
     font-family: Courier;
 }
 
 .cost {
-    position: relative;
-    top: 0px;
+    position: absolute;
+    top: 85px;
     font-size: 24px;
+    width: 125px;
     font-family: Courier;
 }
 .opened {
-    position: relative;
-    top: 0px;
+    position: absolute;
+    top: 25px;
     font-size: 12px;
     height: 60px;
-    width:  80px;
-    margin: auto;
+    width: 125px;
     display: table;
 }
 .opened div {
     display: table-cell;
     vertical-align: middle;
 }
+
+.opened div span {
+    display: block;
+    width:  80px;
+    margin: auto;
+}
+
 .closed {
     position: relative;
     font-size: 36px;
