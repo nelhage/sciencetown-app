@@ -29,6 +29,11 @@ body {
     background-image: url(/static/hex2.png);
 }
 
+.hex.opening {
+    background-image: url(/static/hex2_selected.png);
+    color: #000;
+}
+
 #map {
     position: absolute;
     left: 650px;
@@ -85,10 +90,6 @@ body {
     font-size: 36px;
     width: 125px;
     top: 36px;
-}
-
-a {
-    text-decoration: none;
 }
 
 #openwindow {

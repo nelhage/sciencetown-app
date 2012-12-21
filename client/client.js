@@ -32,8 +32,12 @@ Template.hex.css_class = function() {
     } else {
         classes.push('visible');
     }
-    if (d == 1) {
+    if (d >= 1 && Session.get('$admin')) {
         classes.push('openable');
+    }
+    if (Session.get('opening') &&
+        Session.get('opening').code === this.code) {
+        classes.push('opening');
     }
     return classes.join(" ");
 }
