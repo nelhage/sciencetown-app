@@ -3,8 +3,31 @@
 </head>
 
 <body>
+  {{> opendialog }}
   {{> map}}
 </body>
+
+<template name='opendialog'>
+  {{#if show}}
+    <div id="openwindow">
+    <form>
+      <p>
+        Opening:  <span id="codeshow">{{code}}</span>
+      </p>
+      <p>Opened by:
+        <select name="who" id="whoinput">
+          {{#each characters}}
+          <option value="{{charcode}}">{{name}}</option>
+          {{/each}}
+        </select>
+      </p><p>
+        <input type="submit" value="Open"   class='open'/>
+        <input type="button" value="Cancel" class='cancel'/>
+      </p>
+    </form>
+  </div>
+  {{/if}}
+</template>
 
 <template name="map">
   <div id='map'>
@@ -13,7 +36,6 @@
   {{/each}}
   </div>
 </template>
-
 
 <template name="hex">
   <span style="left: {{left}}px; top: {{top}}px;" class="hex {{css_class}}">

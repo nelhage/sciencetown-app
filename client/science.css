@@ -2,30 +2,30 @@ body {
     background-color: #ccc;
 }
 
-.open.color_red {
+.visible.color_red {
     background-image: url(/static/hex2_red.png);
 }
-.open.color_green {
+.visible.color_green {
     background-image: url(/static/hex2_green.png);
 }
-.open.color_yellow {
+.visible.color_yellow {
     background-image: url(/static/hex2_yellow.png);
 }
-.open.color_orange {
+.visible.color_orange {
     background-image: url(/static/hex2_orange.png);
 }
-.open.color_purple {
+.visible.color_purple {
     background-image: url(/static/hex2_purple.png);
     color: #fff;
 }
-.open.color_blue {
+.visible.color_blue {
     background-image: url(/static/hex2_blue.png);
     color: #fff;
 }
-.open.color_white {
+.visible.color_white {
     background-image: url(/static/hex2_white.png);
 }
-.hex.closed {
+.hex.hidden {
     background-image: url(/static/hex2.png);
 }
 
@@ -99,7 +99,6 @@ a {
     background-color: white;
     padding: 1em;
     z-index: 10;
-    display: none;
 }
 
 #codeshow {

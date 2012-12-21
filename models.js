@@ -135,8 +135,22 @@ function open(x, y, who) {
         return hex;
     hex.opened.at = new Date().getTime() / 1000;
     hex.opened.by = who;
-    hex.distance = 0;
     MapData.update(hex._id, hex);
+    var q = [{x: hex.x, y: hex.y, d: 0}];
+    while (q.length) {
+        var e = q.pop()
+        hex = MapData.findOne({x: e.x, y: e.y});
+        if (!hex || hex.distance <= e.d)
+            continue;
+        hex.distance = e.d;
+        MapData.update(hex._id, hex);
+        q.push({x: e.x+1, y:e.y, d: e.d+1});
+        q.push({x: e.x-1, y:e.y, d: e.d+1});
+        q.push({x: e.x, y:e.y+1, d: e.d+1});
+        q.push({x: e.x, y:e.y-1, d: e.d+1});
+        q.push({x: e.x+1, y:e.y-1, d: e.d+1});
+        q.push({x: e.x-1, y:e.y+1, d: e.d+1});
+    }
 }
 
 function reloadData() {
@@ -172,3 +186,20 @@ function hex_left(hex) {
     return 92 * hex.y;
 }
 
+var characterMap = {
+    "Dr. Forrester":    "forrester",
+    "Bill Nye":         "bill",
+    "Dr. Lecter":       "lecter",
+    "Blofeld":          "blofeld",
+    "Dr. Evil":         "evil",
+    "Jekyll":           "jekyll",
+    "Dexter":           "dexter",
+    "Dr. Horrible":     "horrible",
+    "Dr. Doom":         "doom",
+    "Dr. T":            "dr. t",
+    "Lex Luthor":       "luthor",
+    "Dr. Frankenstein": "frankst",
+    "Egon Spengler":    "spengler",
+    "Dr. Claw":         "claw",
+    "Dr. Mario":        "mario"
+};
