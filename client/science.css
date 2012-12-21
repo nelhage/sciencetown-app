@@ -28,6 +28,9 @@ body {
 .hex.hidden {
     background-image: url(/static/hex2.png);
 }
+.hex.open {
+    background-image: url(/static/hex2.png);
+}
 
 .hex.opening {
     background-image: url(/static/hex2_selected.png);
@@ -90,6 +93,24 @@ body {
     font-size: 36px;
     width: 125px;
     top: 36px;
+}
+
+.hex .who {
+    display: none;
+    font-face: Courier;
+    font-size: 16px;
+    position: absolute;
+    width: 125px;
+    top: 26px;
+    font-weight: bold;
+}
+
+.hex.visible.pending .who {
+    display: block;
+}
+
+.hex.open .cost {
+    display: none;
 }
 
 #openwindow {

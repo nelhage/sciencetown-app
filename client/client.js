@@ -27,13 +27,18 @@ Template.hex.top = function () {
 Template.hex.css_class = function() {
     var classes = ["color_" + this.color];
     var d = distance(this);
-    if (d > 2) {
-        classes.push('hidden');
-    } else {
+    if (d == 0 && timeAfter(new Date((this.opened.at + OPEN_DELAY) * 1000))) {
+        classes.push('open');
+    } else if (d <= 1) {
         classes.push('visible');
+    } else {
+        classes.push('hidden');
     }
     if (d >= 1 && Session.get('$admin')) {
         classes.push('openable');
+    }
+    if (this.opened.by) {
+        classes.push('pending');
     }
     if (Session.get('opening') &&
         Session.get('opening').code === this.code) {
@@ -47,11 +52,13 @@ Template.hex.showCode = function() {
 }
 
 Template.hex.showWho = function() {
-    return false;
+    if (!this.opened.at)
+        return false;
+    return timeBefore(new Date((this.opened.at + OPEN_DELAY) * 1000));
 }
 
 Template.hex.showCost = function() {
-    return distance(this) > 0;
+    return distance(this) > 0 || timeBefore(new Date((this.opened.at + OPEN_DELAY) * 1000));
 }
 
 Template.hex.events({

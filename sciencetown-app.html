@@ -42,12 +42,8 @@
     {{#if showCode }}
     <div class="code">{{code}}</div>
     <div class="opened"><div><span>{{name}}</span></div></div>
-      {{#if showWho}}
        <div class="who">{{opened.by}}</div>
-      {{/if}}
-      {{#if showCost}}
-        <div class="cost">{{cost}}</div>
-      {{/if}}
+       <div class="cost">{{cost}}</div>
     {{else}}
     <div class="closed">{{cost}}</div>
     {{/if}}

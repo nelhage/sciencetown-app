@@ -10,6 +10,8 @@ MapData = new Meteor.Collection("map_data");
  *   name: <string>
  */
 
+var OPEN_DELAY = 10*60;
+
 var initialData = [
 "0       0       white 0 MADS Mad Science 101",
 
@@ -129,11 +131,13 @@ function hexDist(x, y) {
     return dist;
 }
 
-function open(x, y, who) {
+function open(x, y, who, at) {
+    if (at === undefined)
+        at = new Date().getTime() / 1000;
     var hex = MapData.findOne({x: x, y: y});
     if (hex === null)
         return hex;
-    hex.opened.at = new Date().getTime() / 1000;
+    hex.opened.at = at;
     hex.opened.by = who;
     MapData.update(hex._id, hex);
     var q = [{x: hex.x, y: hex.y, d: 0}];
@@ -175,7 +179,7 @@ function reloadData() {
             };
             MapData.insert(hex);
         });
-    open(0, 0, "-");
+    open(0, 0, "-", 0);
 }
 
 function hex_top(hex) {
@@ -203,3 +207,23 @@ var characterMap = {
     "Dr. Claw":         "claw",
     "Dr. Mario":        "mario"
 };
+
+function timeAfter(date) {
+    var now = new Date();
+    if (now >= date)
+        return true;
+    var context = Meteor.deps.Context.current;
+    if (context) {
+        var timer = Meteor.setTimeout(function() {
+                                          context.invalidate();
+                                      }, date - now);
+        context.onInvalidate(function() {
+            Meteor.clearTimeout(timer);
+        });
+    }
+    return false;
+}
+
+function timeBefore(date) {
+    return !timeAfter(date);
+}
