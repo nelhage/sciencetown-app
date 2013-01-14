@@ -182,6 +182,8 @@ function reloadData() {
     open(0, 0, "-", 0);
 }
 
+Meteor.methods({reloadData: reloadData});
+
 function hex_top(hex) {
     return hex.x * -106 - hex.y * 53
 }
