@@ -34,7 +34,7 @@ Template.hex.css_class = function() {
     } else {
         classes.push('hidden');
     }
-    if (d >= 1 && Session.get('$admin')) {
+    if (d >= 1 /* && Session.get('$admin') */) {
         classes.push('openable');
     }
     if (this.opened.by) {
