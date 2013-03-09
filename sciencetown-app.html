@@ -3,9 +3,30 @@
 </head>
 
 <body>
+  {{> adminpane }}
   {{> opendialog }}
   {{> map}}
 </body>
+
+<template name='adminpane'>
+  <div id='adminpane'>
+  {{#if isadmin}}
+  <button id='closeadmin'>Close admin mode</button>
+  {{> adminui }}
+  {{else}}
+  <button id='goadmin'>Open admin mode</button>
+  {{/if}}
+  </div>
+</template>
+
+<template name="adminui">
+  {{#if viewall}}
+  <button id='hideall'>Hide unopened hexes</button>
+  {{else}}
+  <button id='showall'>Show all hexes</button>
+  {{/if}}
+  <button id='reset'>Reset map</button>
+</template>
 
 <template name='opendialog'>
   {{#if show}}

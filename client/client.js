@@ -26,29 +26,33 @@ Template.hex.top = function () {
 
 Template.hex.css_class = function() {
     var classes = ["color_" + this.color];
-    var d = distance(this);
-    if (d == 0 && timeAfter(new Date((this.opened.at + OPEN_DELAY) * 1000))) {
-        classes.push('open');
-    } else if (d <= 1) {
-        classes.push('visible');
+    if (showAll()) {
+        classes.push("visible");
     } else {
-        classes.push('hidden');
-    }
-    if (d >= 1 /* && Session.get('$admin') */) {
-        classes.push('openable');
-    }
-    if (this.opened.by) {
-        classes.push('pending');
-    }
-    if (Session.get('opening') &&
-        Session.get('opening').code === this.code) {
-        classes.push('opening');
+        var d = distance(this);
+        if (d == 0 && timeAfter(new Date((this.opened.at + OPEN_DELAY) * 1000))) {
+            classes.push('open');
+        } else if (d <= 1) {
+            classes.push('visible');
+        } else {
+            classes.push('hidden');
+        }
+        if (d >= 1 && adminMode()) {
+            classes.push('openable');
+        }
+        if (this.opened.by) {
+            classes.push('pending');
+        }
+        if (Session.get('opening') &&
+            Session.get('opening').code === this.code) {
+            classes.push('opening');
+        }
     }
     return classes.join(" ");
 }
 
 Template.hex.showCode = function() {
-    return distance(this) <= 1;
+    return showAll() || distance(this) <= 1;
 }
 
 Template.hex.showWho = function() {
@@ -64,6 +68,41 @@ Template.hex.showCost = function() {
 Template.hex.events({
     'click .hex.openable': function () {
         Session.set('opening', this);
+    }
+});
+
+function showAll() {
+    return !!Session.get('$showall');
+}
+
+Template.adminpane.isadmin = function() {
+    return adminMode();
+}
+Template.adminui.viewall = function() {
+    return adminMode() && showAll();
+}
+
+Template.adminpane.events({
+    'click #goadmin': function() {
+        Session.set('$admin', true);
+    },
+    'click #closeadmin': function() {
+        Session.set('$admin', false);
+    },
+});
+
+Template.adminui.events({
+    'click #showall': function() {
+        Session.set('$showall', true);
+    },
+    'click #hideall': function() {
+        Session.set('$showall', false);
+    },
+    'click #reset': function() {
+        if (window.confirm("Really reset map data?")) {
+            Meteor.call('reloadData');
+            Session.set('opening', undefined);
+        }
     }
 });
 

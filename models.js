@@ -105,7 +105,12 @@ if (Meteor.isServer) {
     Meteor.startup(function () {
         if (MapData.find().count() == 0)
             reloadData();
-        });
+        sweep();
+    });
+}
+
+function adminMode() {
+    return !!Session.get("$admin");
 }
 
 function hexDist(x, y) {
@@ -140,7 +145,11 @@ function open(x, y, who, at) {
     hex.opened.at = at;
     hex.opened.by = who;
     MapData.update(hex._id, hex);
-    var q = [{x: hex.x, y: hex.y, d: 0}];
+    dfs(hex, at === 0 ? 0 : 1);
+}
+
+function dfs(hex, distance) {
+    var q = [{x: hex.x, y: hex.y, d: distance}];
     while (q.length) {
         var e = q.pop()
         hex = MapData.findOne({x: e.x, y: e.y});
@@ -155,6 +164,17 @@ function open(x, y, who, at) {
         q.push({x: e.x+1, y:e.y-1, d: e.d+1});
         q.push({x: e.x-1, y:e.y+1, d: e.d+1});
     }
+}
+
+function sweep() {
+    var when = (new Date().getTime() / 1000) - OPEN_DELAY;
+    MapData.find({'opened.at': { '$lt': when }, distance: 1}).forEach(function (hex) {
+        dfs(hex, 1);
+    });
+}
+
+if (Meteor.isServer) {
+    Meteor.setInterval(sweep, 60*1000);
 }
 
 function reloadData() {
