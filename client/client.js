@@ -103,6 +103,9 @@ Template.adminui.events({
             Meteor.call('reloadData');
             Session.set('opening', undefined);
         }
+    },
+    'click #sweep': function() {
+        Meteor.call('sweep');
     }
 });
 

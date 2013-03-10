@@ -12,7 +12,7 @@ MapData = new Meteor.Collection("map_data");
 
 var OPEN_DELAY = 10*60;
 
-var initialData = [
+var initialData = {"SCIENCE": [
 "0       0       white 0 MADS Mad Science 101",
 
 "1       0       blue  0 LASR Lasers",
@@ -99,7 +99,81 @@ var initialData = [
 "7       -5      red   0 GHOS G.H.O.S.T.",
 "4       -3      red   0 PCON Paranormal Containment",
 "2       -4      red   0 FRSH Frightening Freshness",
-];
+],
+    "FOOD": [
+"0  0       white 0 FOOD Food 101",
+
+"1  0       red   0 MET1 Meat I",
+"2  0       red   0 MET2 Meat II",
+"3  0       red   0 MET3 Meat III",
+"4  0       red   0 STAK Steak",
+"2  -1      red   0 JRKY Jerky",
+"3  -1      red   0 MCNG McNuggets",
+"4  -1      red   0 CHKN Chicken",
+"3  1       red   0 CHZB Cheeseburger",
+"5  -2      red   0 KYFC KFC",
+"6  -3      red   0 BACO Bacon",
+"2  2       red   0 JEWS Jews' Bane",
+
+"0  1       blue  0 DRY1 Dairy I",
+"0  2       blue  0 DRY2 Dairy II",
+"0  3       blue  0 DRY3 Dairy III",
+"1  2       blue  0 LCTS Lactose",
+"1  3       blue  0 MCOW Milk Cow",
+"1  4       blue  0 MILK Milk",
+"-1 3       blue  0 SPRD Spreadable Cheese",
+"-1 4       blue  0 CRMC Cream Cheese",
+"-1 5       blue  0 ASGO Asiago",
+"-1 6       blue  0 CMBR Camembert",
+"-2 4       blue  0 BAGL Bagel w/ Cream Cheese",
+"-2 6       blue  0 GRYR Gruyère",
+
+"-1  1      yellow 0 GRN1 Grain I",
+"-2  2      yellow 0 GRN2 Grain II",
+"-3  3      yellow 0 GRN3 Grain III",
+"-3  4      yellow 0 TRDL Toroidal Bread",
+"-3  5      yellow 0 CUBC Cubic Bread",
+"-3  6      yellow 0 FNDU Cheese Fondue",
+"-4  3      yellow 0 SLCD Sliced Bread",
+"-5  4      yellow 0 BGTT Baguette",
+"-6  5      yellow 0 CBTT Ciabatta",
+"-5  5      yellow 0 FCCA Foccacia",
+
+"-1  0      green 0 VEG1 Vegetables I",
+"-2  0      green 0 VEG2 Vegetables II",
+"-3  0      green 0 VEG3 Vegetables III",
+"-3  1      green 0 FLTV Flat Veggies",
+"-4  1      green 0 LTTC Lettuce",
+"-5  1      green 0 SALD Salad",
+"-4  2      green 0 GRDN Garden Burger",
+"-2  -1     green 0 PTAT Potato",
+"-3  -1     green 0 ZUCC Zucchini",
+"-2  -2     green 0 TMAT Tomato",
+
+"0   -1     orange 0 FRT1 Fruit I",
+"0   -2     orange 0 FRT2 Fruit II",
+"0   -3     orange 0 FRT3 Fruit III",
+"0   -4     orange 0 ORNG Oranges",
+"-1  -2     orange 0 CHRR Cherries",
+"-1  -4     orange 0 KMQT Kumquats",
+"1   -3     orange 0 KIWI Kiwis",
+"1   -4     orange 0 PEAR Pears",
+"2   -4     orange 0 FRTR Fruit Tarts",
+"2   -5     orange 0 APPL Apples",
+"3   -6     orange 0 CRML Caramel Apples",
+
+"1   -1     purple 0 OM01 Om",
+"2   -2     purple 0 NOM1 Nom I",
+"3   -3     purple 0 NOM2 Nom II",
+"4   -3     purple 0 COCO Hot Cocoa",
+"5   -3     purple 0 BCNC Bacon Chocolate",
+"5   -4     purple 0 CHOC Chocolate",
+"6   -5     purple 0 FDGS Fudge Sauce",
+"7   -6     purple 0 FDGE Fudge",
+"4   -4     purple 0 CNDY Candy",
+"3   -4     purple 0 GMMI Gummi Worms",
+"3   -5     purple 0 BRNT Burnt Sugar",
+    ]};
 
 if (Meteor.isServer) {
     Meteor.startup(function () {
@@ -167,20 +241,25 @@ function dfs(hex, distance) {
 }
 
 function sweep() {
+    console.log("Sweeping...");
     var when = (new Date().getTime() / 1000) - OPEN_DELAY;
     MapData.find({'opened.at': { '$lt': when }, distance: 1}).forEach(function (hex) {
-        dfs(hex, 1);
+        console.log("Sweeping: %s", hex.name);
+        dfs(hex, 0);
     });
 }
 
-if (Meteor.isServer) {
-    Meteor.setInterval(sweep, 60*1000);
-}
+Meteor.startup(function() {
+  if (Meteor.isServer) {
+      Meteor.setInterval(sweep, 60*1000);
+  }
+});
 
-function reloadData() {
+function reloadData(which) {
     MapData.remove({});
     var costByDist = [0, 1, 3, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7];
-    initialData.forEach(function (line) {
+    var data = initialData[which] || initialData.SCIENCE;
+    data.forEach(function (line) {
         var pieces = line.split(/\s+/);
         var x = parseInt(pieces[0]);
         var y = parseInt(pieces[1]);
@@ -202,7 +281,6 @@ function reloadData() {
     open(0, 0, "-", 0);
 }
 
-Meteor.methods({reloadData: reloadData});
 
 function hex_top(hex) {
     return hex.x * -106 - hex.y * 53
@@ -248,4 +326,12 @@ function timeAfter(date) {
 
 function timeBefore(date) {
     return !timeAfter(date);
+}
+
+if (Meteor.isServer) {
+    Meteor.methods({
+            reloadData: reloadData,
+            sweep: sweep});
+} else {
+    Meteor.methods({sweep: function() {}});
 }
