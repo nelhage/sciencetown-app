@@ -30,9 +30,9 @@ Template.hex.css_class = function() {
         classes.push("visible");
     } else {
         var d = distance(this);
-        if (d == 0 && timeAfter(new Date((this.opened.at + OPEN_DELAY) * 1000))) {
+        if (d == 0) {
             classes.push('open');
-        } else if (d <= 1) {
+        } else if (d == 1) {
             classes.push('visible');
         } else {
             classes.push('hidden');
@@ -40,7 +40,7 @@ Template.hex.css_class = function() {
         if (d >= 1 && adminMode()) {
             classes.push('openable');
         }
-        if (this.opened.by) {
+        if (d == 1 && this.opened.by) {
             classes.push('pending');
         }
         if (Session.get('opening') &&
